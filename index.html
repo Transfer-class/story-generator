@@ -1,0 +1,639 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Story Generator</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts - Inter -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <style>
+      body {
+        font-family: "Inter", sans-serif;
+      }
+    </style>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4"
+  >
+    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-4xl w-full">
+      <h1
+        class="text-4xl font-extrabold text-center text-gray-800 mb-8 tracking-tight"
+      >
+        Get Story <span class="text-indigo-600">!</span>
+      </h1>
+
+      <!-- Controls Section -->
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-end">
+        <!-- Level Selection -->
+        <div class="flex flex-col">
+          <label
+            for="level-select"
+            class="block text-gray-700 text-lg font-semibold mb-2"
+          >
+            Select Level:
+          </label>
+          <div class="relative">
+            <select
+              id="level-select"
+              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+            >
+              <option value="A1">A1</option>
+              <option value="A2">A2</option>
+              <option value="B1">B1</option>
+              <option value="B2">B2</option>
+              <option value="C1">C1</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+            >
+              <svg
+                class="fill-current h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.096 6.924 4.682 8.338z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission Selection -->
+        <div class="flex flex-col">
+          <label
+            for="mission-select"
+            class="block text-gray-700 text-lg font-semibold mb-2"
+          >
+            Select Mission:
+          </label>
+          <div class="relative">
+            <select
+              id="mission-select"
+              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+              disabled
+            >
+              <option value="" disabled>No Mission Found</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+            >
+              <svg
+                class="fill-current h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.096 6.924 4.682 8.338z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Generate Button -->
+        <div class="flex flex-col md:col-span-1">
+          <button
+            id="generate-button"
+            class="w-full py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-indigo-300 cursor-not-allowed"
+            disabled
+          >
+            <span id="button-text">Get Stroy</span>
+            <span
+              id="loading-spinner"
+              class="hidden flex items-center justify-center"
+            >
+              <svg
+                class="animate-spin -ml-1 mr-3 h-6 w-6 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle
+                  class="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  stroke-width="4"
+                ></circle>
+                <path
+                  class="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+              Searching ...
+            </span>
+          </button>
+        </div>
+      </div>
+
+      <!-- Display extracted words -->
+      <div
+        id="extracted-words-section"
+        class="hidden bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg mb-8 shadow-inner"
+      >
+        <h3 class="text-md font-semibold mb-3">Words of this mission:</h3>
+        <p id="extracted-words-container" class="flex flex-wrap gap-2 text-lg">
+          <!-- Words will be injected here -->
+        </p>
+      </div>
+
+      <!-- Story Display Area -->
+      <div
+        class="bg-gray-50 p-6 rounded-xl shadow-inner min-h-[200px] flex flex-col justify-center items-center"
+      >
+        <div
+          id="error-message"
+          class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mb-4"
+          role="alert"
+        >
+          <strong class="font-bold">Error!</strong>
+          <span id="error-text" class="block sm:inline ml-2"></span>
+        </div>
+        <div id="story-content">
+          <div id="english-story-container" class="mb-6 w-full hidden">
+            <h3 class="text-2xl font-bold text-gray-700 mb-3">
+              English Story:
+            </h3>
+            <p
+              id="english-story-text"
+              class="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap"
+            >
+              <!-- English story will be injected here -->
+            </p>
+          </div>
+          <!-- New button to toggle Bangla story visibility -->
+          <button
+            id="toggle-bangla-story-button"
+            class="hidden w-fit py-2 px-4 mb-4 rounded-lg text-white font-semibold text-base transition duration-300 ease-in-out bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg"
+          >
+            Show Bangla Translation
+          </button>
+          <div id="bangla-story-container" class="w-full hidden">
+            <h3 class="text-2xl font-bold text-gray-700 mb-3">বাংলা:</h3>
+            <p
+              id="bangla-story-text"
+              class="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap"
+            >
+              <!-- Bangla story will be injected here -->
+            </p>
+          </div>
+          <p id="initial-message" class="text-gray-500 text-lg italic">
+            Select the level and mission above and click the 'Get Story' button.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <script type="module">
+      // In a real application, you would import this data from './data.js' like:
+      import allWordsData from "./data.js";
+      // For this single HTML file demonstration, the data is defined here:
+
+      // DOM elements
+      const levelSelect = document.getElementById("level-select");
+      const missionSelect = document.getElementById("mission-select");
+      const generateButton = document.getElementById("generate-button");
+      const buttonText = document.getElementById("button-text");
+      const loadingSpinner = document.getElementById("loading-spinner");
+      const extractedWordsSection = document.getElementById(
+        "extracted-words-section"
+      );
+      const extractedWordsContainer = document.getElementById(
+        "extracted-words-container"
+      );
+      const englishStoryContainer = document.getElementById(
+        "english-story-container"
+      );
+      const englishStoryText = document.getElementById("english-story-text");
+      const banglaStoryContainer = document.getElementById(
+        "bangla-story-container"
+      );
+      const banglaStoryText = document.getElementById("bangla-story-text");
+      const errorMessageDiv = document.getElementById("error-message");
+      const errorTextSpan = document.getElementById("error-text");
+      const initialMessage = document.getElementById("initial-message");
+      const toggleBanglaStoryButton = document.getElementById(
+        "toggle-bangla-story-button"
+      );
+
+      // Global state variables (now within module scope)
+      let selectedLevel = "A1";
+      let selectedMission = "";
+      let extractedWordsForMission = [];
+      let isBanglaStoryVisible = false; // New state to track Bangla story visibility
+
+      /**
+       * Displays an error message.
+       * @param {string} message - The error message to display.
+       */
+      function displayError(message) {
+        errorMessageDiv.classList.remove("hidden");
+        errorTextSpan.textContent = message;
+        initialMessage.classList.add("hidden");
+      }
+
+      /**
+       * Clears any displayed error messages.
+       */
+      function clearError() {
+        errorMessageDiv.classList.add("hidden");
+        errorTextSpan.textContent = "";
+      }
+
+      /**
+       * Shows the loading spinner and disables the button.
+       */
+      function showLoading() {
+        generateButton.disabled = true;
+        generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
+        generateButton.classList.remove(
+          "bg-indigo-600",
+          "hover:bg-indigo-700",
+          "shadow-lg",
+          "hover:shadow-xl",
+          "transform",
+          "hover:-translate-y-0.5"
+        );
+        buttonText.classList.add("hidden");
+        loadingSpinner.classList.remove("hidden");
+        clearStoryDisplay(); // Clear stories when loading starts
+      }
+
+      /**
+       * Hides the loading spinner and enables the button.
+       */
+      function hideLoading() {
+        generateButton.disabled = false;
+        generateButton.classList.remove("bg-indigo-300", "cursor-not-allowed");
+        generateButton.classList.add(
+          "bg-indigo-600",
+          "hover:bg-indigo-700",
+          "shadow-lg",
+          "hover:shadow-xl",
+          "transform",
+          "hover:-translate-y-0.5"
+        );
+        buttonText.classList.remove("hidden");
+        loadingSpinner.classList.add("hidden");
+      }
+
+      /**
+       * Clears the displayed stories and resets Bangla story visibility.
+       */
+      function clearStoryDisplay() {
+        englishStoryText.innerHTML = "";
+        banglaStoryText.textContent = "";
+        englishStoryContainer.classList.add("hidden");
+        banglaStoryContainer.classList.add("hidden");
+        toggleBanglaStoryButton.classList.add("hidden"); // Hide the toggle button
+        toggleBanglaStoryButton.textContent = "Show Bangla Translation"; // Reset button text
+        isBanglaStoryVisible = false; // Reset state
+        initialMessage.classList.remove("hidden");
+      }
+
+      /**
+       * Updates the available missions dropdown based on the selected level.
+       */
+      function updateMissions() {
+        console.log("updateMissions called. selectedLevel:", selectedLevel);
+        clearError();
+        clearStoryDisplay();
+
+        const wordsInLevel = allWordsData.filter(
+          (word) => word.level === selectedLevel
+        );
+        const missions = [
+          ...new Set(wordsInLevel.map((word) => word.mission)),
+        ].sort((a, b) => a - b);
+        console.log("Found missions for level", selectedLevel, ":", missions);
+
+        missionSelect.innerHTML = ""; // Clear existing options
+        if (missions.length > 0) {
+          missions.forEach((mission) => {
+            const option = document.createElement("option");
+            option.value = mission;
+            option.textContent = `Mission ${mission}`;
+            missionSelect.appendChild(option);
+          });
+          selectedMission = missions[0]; // Set default to first available mission
+          missionSelect.disabled = false;
+        } else {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No mission Found";
+          option.disabled = true;
+          missionSelect.appendChild(option);
+          selectedMission = "";
+          missionSelect.disabled = true;
+        }
+        missionSelect.value = selectedMission; // Ensure the dropdown reflects the selectedMission
+        updateExtractedWords(); // Render extracted words after mission selection (no translation needed here)
+      }
+
+      /**
+       * Updates the displayed extracted words for the selected mission.
+       */
+      function updateExtractedWords() {
+        console.log(
+          "updateExtractedWords called. selectedLevel:",
+          selectedLevel,
+          "selectedMission:",
+          selectedMission
+        );
+        clearError();
+        clearStoryDisplay();
+
+        if (selectedLevel && selectedMission !== "") {
+          extractedWordsForMission = allWordsData.filter(
+            (word) =>
+              word.level === selectedLevel && word.mission === selectedMission
+          );
+          console.log("Words extracted for mission:", extractedWordsForMission);
+          renderExtractedWords();
+
+          // Enable generate button if words are found
+          if (extractedWordsForMission.length > 0) {
+            generateButton.disabled = false;
+            generateButton.classList.remove(
+              "bg-indigo-300",
+              "cursor-not-allowed"
+            );
+            generateButton.classList.add(
+              "bg-indigo-600",
+              "hover:bg-indigo-700",
+              "shadow-lg",
+              "hover:shadow-xl",
+              "transform",
+              "hover:-translate-y-0.5"
+            );
+            console.log("Generate button ENABLED.");
+          } else {
+            generateButton.disabled = true;
+            generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
+            generateButton.classList.remove(
+              "bg-indigo-600",
+              "hover:bg-indigo-700",
+              "shadow-lg",
+              "hover:shadow-xl",
+              "transform",
+              "hover:-translate-y-0.5"
+            );
+            console.log(
+              "Generate button DISABLED: No words found for this mission."
+            );
+          }
+        } else {
+          extractedWordsForMission = [];
+          extractedWordsSection.classList.add("hidden");
+          generateButton.disabled = true;
+          generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
+          generateButton.classList.remove(
+            "bg-indigo-600",
+            "hover:bg-indigo-700",
+            "shadow-lg",
+            "hover:shadow-xl",
+            "transform",
+            "hover:-translate-y-0.5"
+          );
+          console.log(
+            "Generate button DISABLED: Level or Mission not selected."
+          );
+        }
+      }
+
+      /**
+       * Renders the extracted words to the UI. Displays English word and Bangla meaning.
+       */
+      function renderExtractedWords() {
+        console.log("renderExtractedWords called.");
+        extractedWordsContainer.innerHTML = ""; // Clear previous words
+        if (extractedWordsForMission.length > 0) {
+          extractedWordsSection.classList.remove("hidden");
+          extractedWordsForMission.forEach((wordObj) => {
+            const span = document.createElement("span");
+            span.className =
+              "bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-base font-medium whitespace-nowrap";
+            span.textContent = `${wordObj.word} (${wordObj.bangla_meaning})`; // Corrected: Display English word (Bangla meaning)
+            extractedWordsContainer.appendChild(span);
+          });
+          console.log("Words rendered.");
+        } else {
+          extractedWordsSection.classList.add("hidden");
+          console.log("No words to render, hiding section.");
+        }
+      }
+
+      /**
+       * Highlights words in a given text with a specific style.
+       * @param {string} text - The text to highlight.
+       * @param {string[]} wordsToHighlight - An array of words (strings) to highlight.
+       * @returns {string} The text with highlighted words as HTML.
+       */
+      function highlightWords(text, wordsToHighlight) {
+        if (!text || !wordsToHighlight || wordsToHighlight.length === 0) {
+          return text;
+        }
+
+        // Escape special characters in wordsToHighlight for regex safety
+        const escapedWords = wordsToHighlight.map((word) =>
+          word.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")
+        );
+
+        // Create a regex to match any of the words, case-insensitive, as whole words
+        const pattern = new RegExp(`\\b(${escapedWords.join("|")})\\b`, "gi");
+
+        // Replace matched words with a styled span
+        const highlightedText = text.replace(pattern, (match) => {
+          return `<span style="background-color: #FED7AA; color: #CC4B00; font-weight: bold; padding: 2px 4px; border-radius: 4px;">${match}</span>`;
+        });
+
+        return highlightedText;
+      }
+
+      /**
+       * Handles story generation and translation using Gemini API.
+       */
+      async function generateStory() {
+        if (extractedWordsForMission.length === 0) {
+          displayError(
+            "No words found for the selected mission. Please select a level and mission with words."
+          );
+          return;
+        }
+
+        showLoading();
+        clearError();
+        initialMessage.classList.add("hidden");
+        toggleBanglaStoryButton.classList.add("hidden"); // Hide button until story is generated
+        banglaStoryContainer.classList.add("hidden"); // Ensure Bangla story is hidden initially on new generation
+
+        const words = extractedWordsForMission.map((word) => word.word);
+        const englishPrompt = `Write a short story (around 150-200 words) using the following English words: ${words.join(
+          ", "
+        )}. Ensure all words are incorporated naturally and the story makes sense.`;
+
+        try {
+          // First API call for English story generation
+          let chatHistory = [];
+          chatHistory.push({ role: "user", parts: [{ text: englishPrompt }] });
+          const payload = { contents: chatHistory };
+          const apiKey = "AIzaSyBWPKr-Z9E2Bolp12maM_RItMbYLoQizKo"; // API key will be provided by the environment
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+          const englishResponse = await fetch(apiUrl, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+
+          if (!englishResponse.ok) {
+            const errorData = await englishResponse.json();
+            throw new Error(
+              `English story API error: ${englishResponse.status} - ${
+                errorData.error.message || "Unknown error"
+              }`
+            );
+          }
+
+          const englishResult = await englishResponse.json();
+          let generatedEnglishText = "";
+
+          if (
+            englishResult.candidates &&
+            englishResult.candidates.length > 0 &&
+            englishResult.candidates[0].content &&
+            englishResult.candidates[0].content.parts &&
+            englishResult.candidates[0].content.parts.length > 0
+          ) {
+            generatedEnglishText =
+              englishResult.candidates[0].content.parts[0].text;
+            // Highlight words and set innerHTML
+            englishStoryText.innerHTML = highlightWords(
+              generatedEnglishText,
+              words
+            );
+            englishStoryContainer.classList.remove("hidden");
+          } else {
+            displayError(
+              "Failed to generate English story. No content in API response."
+            );
+            console.error(
+              "Unexpected English API response structure:",
+              englishResult
+            );
+            return;
+          }
+
+          // Second API call for Bangla translation
+          if (generatedEnglishText) {
+            const banglaPrompt = `Translate the following English story into natural-sounding Bengali (Bangla). Provide only the translated story, without any introductory phrases or additional text. The story is:\n\n"${generatedEnglishText}"`;
+            let banglaChatHistory = [];
+            banglaChatHistory.push({
+              role: "user",
+              parts: [{ text: banglaPrompt }],
+            });
+            const banglaPayload = { contents: banglaChatHistory };
+
+            const banglaResponse = await fetch(apiUrl, {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(banglaPayload),
+            });
+
+            if (!banglaResponse.ok) {
+              const errorData = await banglaResponse.json();
+              throw new Error(
+                `Bangla translation API error: ${banglaResponse.status} - ${
+                  errorData.error.message || "Unknown error"
+                }`
+              );
+            }
+
+            const banglaResult = await banglaResponse.json();
+
+            if (
+              banglaResult.candidates &&
+              banglaResult.candidates.length > 0 &&
+              banglaResult.candidates[0].content &&
+              banglaResult.candidates[0].content.parts &&
+              banglaResult.candidates[0].content.parts.length > 0
+            ) {
+              const banglaText =
+                banglaResult.candidates[0].content.parts[0].text;
+              banglaStoryText.textContent = banglaText;
+              toggleBanglaStoryButton.classList.remove("hidden"); // Show the toggle button
+            } else {
+              displayError(
+                "Failed to translate story to Bangla. No content in API response."
+              );
+              console.error(
+                "Unexpected Bangla API response structure:",
+                banglaResult
+              );
+            }
+          }
+        } catch (err) {
+          displayError(`Error generating or translating story: ${err.message}`);
+          console.error("Error calling Gemini API:", err);
+        } finally {
+          hideLoading();
+        }
+      }
+
+      // Toggle Bangla story visibility
+      toggleBanglaStoryButton.addEventListener("click", () => {
+        isBanglaStoryVisible = !isBanglaStoryVisible;
+        if (isBanglaStoryVisible) {
+          banglaStoryContainer.classList.remove("hidden");
+          toggleBanglaStoryButton.textContent = "Hide Bangla Translation";
+        } else {
+          banglaStoryContainer.classList.add("hidden");
+          toggleBanglaStoryButton.textContent = "Show Bangla Translation";
+        }
+      });
+
+      // Event Listeners
+      levelSelect.addEventListener("change", (event) => {
+        selectedLevel = event.target.value;
+        updateMissions();
+      });
+
+      missionSelect.addEventListener("change", (event) => {
+        selectedMission = parseInt(event.target.value);
+        updateExtractedWords();
+      });
+
+      generateButton.addEventListener("click", generateStory);
+
+      // Initial setup on page load
+      document.addEventListener("DOMContentLoaded", () => {
+        console.log("DOMContentLoaded fired.");
+        updateMissions(); // Initialize missions for the default level (A1)
+        // Initial state for the button based on words
+        if (extractedWordsForMission.length === 0) {
+          generateButton.disabled = true;
+          generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
+          generateButton.classList.remove(
+            "bg-indigo-600",
+            "hover:bg-indigo-700",
+            "shadow-lg",
+            "hover:shadow-xl",
+            "transform",
+            "hover:-translate-y-0.5"
+          );
+          console.log("Initial button state: DISABLED (no words yet).");
+        }
+      });
+    </script>
+  </body>
+</html>
