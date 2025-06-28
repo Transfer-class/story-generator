@@ -20,17 +20,17 @@
     </style>
   </head>
   <body
-    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center p-4"
+    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center"
   >
-    <div class="bg-white rounded-xl shadow-2xl p-8 max-w-4xl w-full">
+    <div class="bg-white rounded-xl shadow-2xl p-4 max-w-4xl w-full">
       <h1
         class="text-4xl font-extrabold text-center text-gray-800 mb-8 tracking-tight"
       >
-        Get Story <span class="text-indigo-600">!</span>
+        Start Reading Story <span class="text-indigo-600">!</span>
       </h1>
 
-      <!-- Controls Section -->
-      <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8 items-end">
+      <!-- Controls Section - Now with 5 columns for better layout -->
+      <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8 items-end">
         <!-- Level Selection -->
         <div class="flex flex-col">
           <label
@@ -98,6 +98,75 @@
           </div>
         </div>
 
+        <!-- Difficulty Mode Selection -->
+        <div class="flex flex-col">
+          <label
+            for="difficulty-mode-select"
+            class="block text-gray-700 text-lg font-semibold mb-2"
+          >
+            Difficulty Mode:
+          </label>
+          <div class="relative">
+            <select
+              id="difficulty-mode-select"
+              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+            >
+              <option value="easy">Easy</option>
+              <option value="easy+">Easy+</option>
+              <option value="medium">Medium</option>
+              <option value="medium+">Medium+</option>
+              <option value="hard">Hard</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+            >
+              <svg
+                class="fill-current h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.096 6.924 4.682 8.338z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Story Mode Selection -->
+        <div class="flex flex-col">
+          <label
+            for="story-mode-select"
+            class="block text-gray-700 text-lg font-semibold mb-2"
+          >
+            Story Mode:
+          </label>
+          <div class="relative">
+            <select
+              id="story-mode-select"
+              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+            >
+              <option value="children">🧒 Children Mode</option>
+              <option value="exam">🎓 Exam Mode</option>
+              <option value="creative">🎨 Creative Mode</option>
+              <option value="real-world">📜 Real-World Mode</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+            >
+              <svg
+                class="fill-current h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.096 6.924 4.682 8.338z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
         <!-- Generate Button -->
         <div class="flex flex-col md:col-span-1">
           <button
@@ -105,7 +174,7 @@
             class="w-full py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-indigo-300 cursor-not-allowed"
             disabled
           >
-            <span id="button-text">Get Stroy</span>
+            <span id="button-text">Get Story </span>
             <span
               id="loading-spinner"
               class="hidden flex items-center justify-center"
@@ -130,10 +199,79 @@
                   d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
                 ></path>
               </svg>
-              Searching ...
+              Loading...
             </span>
           </button>
         </div>
+      </div>
+
+      <!-- Pronunciation Controls -->
+      <div
+        id="pronunciation-controls"
+        class="hidden flex flex-col md:flex-row gap-4 mb-8 justify-center items-center p-4 rounded-lg bg-gray-100 shadow-inner"
+      >
+        <div class="flex flex-col flex-grow w-full md:w-auto">
+          <label
+            for="voice-select"
+            class="block text-gray-700 text-lg font-semibold mb-2 text-center md:text-left"
+          >
+            Select Voice:
+          </label>
+          <div class="relative">
+            <select
+              id="voice-select"
+              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-800 text-lg appearance-none pr-10"
+            >
+              <option value="" disabled selected>Loading voices...</option>
+            </select>
+            <div
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+            >
+              <svg
+                class="fill-current h-5 w-5"
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 20 20"
+              >
+                <path
+                  d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 6.096 6.924 4.682 8.338z"
+                />
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- New Voice Speed Control -->
+        <div class="flex flex-col flex-grow w-full md:w-auto">
+          <label
+            for="voice-speed-input"
+            class="block text-gray-700 text-lg font-semibold mb-2 text-center md:text-left"
+          >
+            Speed: <span id="voice-speed-value">1.0x</span>
+          </label>
+          <input
+            type="range"
+            id="voice-speed-input"
+            min="0.5"
+            max="2.0"
+            step="0.1"
+            value="1.0"
+            class="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer range-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+          />
+        </div>
+
+        <button
+          id="pronounce-button"
+          class="w-full md:w-auto py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+          disabled
+        >
+          start pronunciation
+        </button>
+        <button
+          id="stop-pronounce-button"
+          class="hidden w-full md:w-auto py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-red-600 hover:bg-red-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+        >
+          Stop Pronunciation
+        </button>
       </div>
 
       <!-- Display extracted words -->
@@ -141,7 +279,7 @@
         id="extracted-words-section"
         class="hidden bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg mb-8 shadow-inner"
       >
-        <h3 class="text-md font-semibold mb-3">Words of this mission:</h3>
+        <h3 class="text-xl font-semibold mb-3">Selected mission words:</h3>
         <p id="extracted-words-container" class="flex flex-wrap gap-2 text-lg">
           <!-- Words will be injected here -->
         </p>
@@ -171,7 +309,7 @@
               <!-- English story will be injected here -->
             </p>
           </div>
-          <!-- New button to toggle Bangla story visibility -->
+          <!-- Button to toggle Bangla story visibility -->
           <button
             id="toggle-bangla-story-button"
             class="hidden w-fit py-2 px-4 mb-4 rounded-lg text-white font-semibold text-base transition duration-300 ease-in-out bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg"
@@ -179,7 +317,9 @@
             Show Bangla Translation
           </button>
           <div id="bangla-story-container" class="w-full hidden">
-            <h3 class="text-2xl font-bold text-gray-700 mb-3">বাংলা:</h3>
+            <h3 class="text-2xl font-bold text-gray-700 mb-3">
+              Bangla Translation:
+            </h3>
             <p
               id="bangla-story-text"
               class="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap"
@@ -202,6 +342,10 @@
       // DOM elements
       const levelSelect = document.getElementById("level-select");
       const missionSelect = document.getElementById("mission-select");
+      const difficultyModeSelect = document.getElementById(
+        "difficulty-mode-select"
+      );
+      const storyModeSelect = document.getElementById("story-mode-select");
       const generateButton = document.getElementById("generate-button");
       const buttonText = document.getElementById("button-text");
       const loadingSpinner = document.getElementById("loading-spinner");
@@ -225,12 +369,27 @@
       const toggleBanglaStoryButton = document.getElementById(
         "toggle-bangla-story-button"
       );
+      const pronunciationControls = document.getElementById(
+        "pronunciation-controls"
+      );
+      const voiceSelect = document.getElementById("voice-select");
+      const pronounceButton = document.getElementById("pronounce-button");
+      const stopPronounceButton = document.getElementById(
+        "stop-pronounce-button"
+      );
+      const voiceSpeedInput = document.getElementById("voice-speed-input");
+      const voiceSpeedValue = document.getElementById("voice-speed-value");
 
       // Global state variables (now within module scope)
       let selectedLevel = "A1";
       let selectedMission = "";
+      let selectedDifficultyMode = "easy";
+      let selectedStoryMode = "children";
       let extractedWordsForMission = [];
-      let isBanglaStoryVisible = false; // New state to track Bangla story visibility
+      let isBanglaStoryVisible = false;
+      let availableVoices = []; // To store available speech synthesis voices
+      let currentUtterance = null; // To keep track of the current speech utterance
+      let selectedSpeechRate = 1.0; // Default speech rate
 
       /**
        * Displays an error message.
@@ -240,6 +399,7 @@
         errorMessageDiv.classList.remove("hidden");
         errorTextSpan.textContent = message;
         initialMessage.classList.add("hidden");
+        console.error("Error displayed:", message);
       }
 
       /**
@@ -248,6 +408,7 @@
       function clearError() {
         errorMessageDiv.classList.add("hidden");
         errorTextSpan.textContent = "";
+        console.log("Error cleared.");
       }
 
       /**
@@ -267,6 +428,8 @@
         buttonText.classList.add("hidden");
         loadingSpinner.classList.remove("hidden");
         clearStoryDisplay(); // Clear stories when loading starts
+        hidePronunciationControls(); // Hide pronunciation controls during loading
+        console.log("Loading started.");
       }
 
       /**
@@ -285,6 +448,7 @@
         );
         buttonText.classList.remove("hidden");
         loadingSpinner.classList.add("hidden");
+        console.log("Loading finished.");
       }
 
       /**
@@ -299,6 +463,94 @@
         toggleBanglaStoryButton.textContent = "Show Bangla Translation"; // Reset button text
         isBanglaStoryVisible = false; // Reset state
         initialMessage.classList.remove("hidden");
+        // Stop any ongoing speech and hide controls
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        }
+        setPronunciationButtonState(false); // Ensure buttons are reset after clearing story
+        console.log("Story display cleared.");
+      }
+
+      /**
+       * Sets the visibility and disabled state of the pronounce and stop buttons.
+       * @param {boolean} isSpeaking - True if speech is active, false otherwise.
+       */
+      function setPronunciationButtonState(isSpeaking) {
+        if (isSpeaking) {
+          pronounceButton.classList.add("hidden");
+          stopPronounceButton.classList.remove("hidden");
+        } else {
+          pronounceButton.classList.remove("hidden");
+          stopPronounceButton.classList.add("hidden");
+        }
+        // Only enable pronounce button if there's a story AND voices are loaded
+        // Use englishStoryText.innerText instead of textContent for robustness, as textContent might still contain
+        // hidden HTML elements if not fully rendered. innerText considers layout.
+        pronounceButton.disabled =
+          englishStoryText.innerText.trim() === "" ||
+          availableVoices.length === 0;
+        console.log(
+          `Pronounce button state set: isSpeaking=${isSpeaking}, pronounceBtn.disabled=${
+            pronounceButton.disabled
+          }, availableVoices.length=${availableVoices.length}, storyTextEmpty=${
+            englishStoryText.innerText.trim() === ""
+          }`
+        );
+      }
+
+      /**
+       * Shows the pronunciation controls div.
+       * Note: Button states within this div are managed by setPronunciationButtonState.
+       */
+      function showPronunciationControls() {
+        pronunciationControls.classList.remove("hidden");
+        // Re-evaluate button state when controls are shown
+        setPronunciationButtonState(false); // Initially not speaking when controls are made visible
+        console.log("Pronunciation controls shown.");
+      }
+
+      /**
+       * Hides the pronunciation controls div.
+       */
+      function hidePronunciationControls() {
+        pronunciationControls.classList.add("hidden");
+        setPronunciationButtonState(false); // Ensure buttons are also reset when controls are hidden
+        console.log("Pronunciation controls hidden.");
+      }
+
+      /**
+       * Populates the voice selection dropdown.
+       */
+      function populateVoiceList() {
+        availableVoices = speechSynthesis
+          .getVoices()
+          .filter((voice) => voice.lang.startsWith("en")); // Filter for English voices
+        voiceSelect.innerHTML = ""; // Clear previous options
+        console.log("Available voices:", availableVoices.length);
+
+        if (availableVoices.length === 0) {
+          const option = document.createElement("option");
+          option.value = "";
+          option.textContent = "No English voices found.";
+          option.disabled = true;
+          voiceSelect.appendChild(option);
+          console.log(
+            "No English voices found. Pronounce button will be disabled."
+          );
+        } else {
+          availableVoices.forEach((voice) => {
+            const option = document.createElement("option");
+            option.value = voice.name;
+            option.textContent = `${voice.name} (${voice.lang})`;
+            if (voice.default) {
+              option.selected = true; // Select default voice if available
+            }
+            voiceSelect.appendChild(option);
+          });
+          console.log("Voices populated.");
+        }
+        // After populating, update button state based on current story and voices
+        setPronunciationButtonState(speechSynthesis.speaking); // Maintain speaking state if active
       }
 
       /**
@@ -330,14 +582,14 @@
         } else {
           const option = document.createElement("option");
           option.value = "";
-          option.textContent = "No mission Found";
+          option.textContent = "No Mission Found";
           option.disabled = true;
           missionSelect.appendChild(option);
           selectedMission = "";
           missionSelect.disabled = true;
         }
         missionSelect.value = selectedMission; // Ensure the dropdown reflects the selectedMission
-        updateExtractedWords(); // Render extracted words after mission selection (no translation needed here)
+        updateExtractedWords(); // Render extracted words after mission selection
       }
 
       /**
@@ -421,9 +673,10 @@
           extractedWordsSection.classList.remove("hidden");
           extractedWordsForMission.forEach((wordObj) => {
             const span = document.createElement("span");
+            // Removed 'whitespace-nowrap' to allow wrapping on small screens
             span.className =
-              "bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-base font-medium whitespace-nowrap";
-            span.textContent = `${wordObj.word} (${wordObj.bangla_meaning})`; // Corrected: Display English word (Bangla meaning)
+              "bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-base font-medium";
+            span.textContent = `${wordObj.word} (${wordObj.bangla_meaning})`; // Display English word (Bangla meaning)
             extractedWordsContainer.appendChild(span);
           });
           console.log("Words rendered.");
@@ -453,11 +706,54 @@
         const pattern = new RegExp(`\\b(${escapedWords.join("|")})\\b`, "gi");
 
         // Replace matched words with a styled span
+        // Ensure no existing `**` are wrapped, as they should be stripped first.
         const highlightedText = text.replace(pattern, (match) => {
           return `<span style="background-color: #FED7AA; color: #CC4B00; font-weight: bold; padding: 2px 4px; border-radius: 4px;">${match}</span>`;
         });
 
         return highlightedText;
+      }
+
+      /**
+       * Maps difficulty mode names to descriptive phrases for the LLM.
+       * @param {string} mode - The selected difficulty mode (e.g., 'easy', 'hard').
+       * @returns {string} A descriptive phrase for the LLM's prompt.
+       */
+      function getDifficultyModeDescription(mode) {
+        switch (mode) {
+          case "easy":
+            return "Very simple language, basic grammar, and short sentences. Suitable for beginners.";
+          case "easy+":
+            return "Between Easy and Medium. Slightly more fluent than Beginner, but still simple and easy to understand.";
+          case "medium":
+            return "Middle level. Natural English with moderate complexity, using common vocabulary and sentence structures.";
+          case "medium+":
+            return "Between Medium and Hard. For learners close to fluency, incorporating some advanced vocabulary and slightly more complex structures.";
+          case "hard":
+            return "Highest level. Native-like, including idioms, complex sentence structures, and advanced vocabulary.";
+          default:
+            return "standard complexity.";
+        }
+      }
+
+      /**
+       * Maps story mode names to descriptive phrases for the LLM.
+       * @param {string} mode - The selected story mode.
+       * @returns {string} A descriptive phrase for the LLM's prompt.
+       */
+      function getStoryModeDescription(mode) {
+        switch (mode) {
+          case "children":
+            return "a fun, imaginative story suitable for kids.";
+          case "exam":
+            return "a realistic passage in the style of an IELTS/TOEFL reading comprehension test, with a formal tone.";
+          case "creative":
+            return "a highly creative and fictional story with rich imagination, potentially using metaphorical language and unique plot elements.";
+          case "real-world":
+            return "a real-life scenario-based story, focusing on practical language and common situations (e.g., a restaurant visit, travel experience, or daily routine).";
+          default:
+            return "a standard story."; // Fallback
+        }
       }
 
       /**
@@ -476,19 +772,27 @@
         initialMessage.classList.add("hidden");
         toggleBanglaStoryButton.classList.add("hidden"); // Hide button until story is generated
         banglaStoryContainer.classList.add("hidden"); // Ensure Bangla story is hidden initially on new generation
+        hidePronunciationControls(); // Hide pronunciation controls when a new story is being generated
 
         const words = extractedWordsForMission.map((word) => word.word);
+        const difficultyDescription = getDifficultyModeDescription(
+          selectedDifficultyMode
+        );
+        const storyTypeDescription = getStoryModeDescription(selectedStoryMode);
+
+        // Combine both mode descriptions into the prompt
         const englishPrompt = `Write a short story (around 150-200 words) using the following English words: ${words.join(
           ", "
-        )}. Ensure all words are incorporated naturally and the story makes sense.`;
+        )}. The story should be written with a "${difficultyDescription}" and be "${storyTypeDescription}". Ensure all words are incorporated naturally and the story makes sense.`;
 
         try {
           // First API call for English story generation
           let chatHistory = [];
           chatHistory.push({ role: "user", parts: [{ text: englishPrompt }] });
           const payload = { contents: chatHistory };
-          const apiKey = "AIzaSyBWPKr-Z9E2Bolp12maM_RItMbYLoQizKo"; // API key will be provided by the environment
-          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+          // Using the provided API key here:
+          const apiKey = "AIzaSyBWPKr-Z9E2Bolp12maM_RItMbYLoQizKo";
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
           const englishResponse = await fetch(apiUrl, {
             method: "POST",
@@ -517,12 +821,21 @@
           ) {
             generatedEnglishText =
               englishResult.candidates[0].content.parts[0].text;
-            // Highlight words and set innerHTML
+
+            // Remove double asterisks from the generated English text
+            const cleanedEnglishText = generatedEnglishText.replace(
+              /\*\*/g,
+              ""
+            );
+
+            // Highlight words and set innerHTML using the cleaned text
             englishStoryText.innerHTML = highlightWords(
-              generatedEnglishText,
+              cleanedEnglishText,
               words
             );
             englishStoryContainer.classList.remove("hidden");
+            showPronunciationControls(); // Show pronunciation controls after English story is generated
+            console.log("English story generated and displayed.");
           } else {
             displayError(
               "Failed to generate English story. No content in API response."
@@ -572,6 +885,12 @@
                 banglaResult.candidates[0].content.parts[0].text;
               banglaStoryText.textContent = banglaText;
               toggleBanglaStoryButton.classList.remove("hidden"); // Show the toggle button
+              isBanglaStoryVisible = false; // Ensure it starts hidden
+              banglaStoryContainer.classList.add("hidden"); // Ensure it starts hidden
+              toggleBanglaStoryButton.textContent = "Show Bangla Translate"; // Ensure button text is "show"
+              console.log(
+                "Bangla story generated and toggle button shown. Story initially hidden."
+              );
             } else {
               displayError(
                 "Failed to translate story to Bangla. No content in API response."
@@ -590,17 +909,62 @@
         }
       }
 
-      // Toggle Bangla story visibility
-      toggleBanglaStoryButton.addEventListener("click", () => {
-        isBanglaStoryVisible = !isBanglaStoryVisible;
-        if (isBanglaStoryVisible) {
-          banglaStoryContainer.classList.remove("hidden");
-          toggleBanglaStoryButton.textContent = "Hide Bangla Translation";
-        } else {
-          banglaStoryContainer.classList.add("hidden");
-          toggleBanglaStoryButton.textContent = "Show Bangla Translation";
+      // Text-to-Speech (TTS) Functions
+      function speakEnglishStory() {
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel(); // Stop any currently speaking utterance
         }
-      });
+
+        const text = englishStoryText.textContent; // Use textContent to get plain text without HTML tags
+        if (!text) {
+          displayError("No English story to pronounce.");
+          setPronunciationButtonState(false); // Ensure buttons are reset if no text
+          return;
+        }
+
+        currentUtterance = new SpeechSynthesisUtterance(text);
+        const selectedVoiceName = voiceSelect.value;
+        const selectedVoice = availableVoices.find(
+          (voice) => voice.name === selectedVoiceName
+        );
+
+        if (selectedVoice) {
+          currentUtterance.voice = selectedVoice;
+        } else {
+          console.warn("Selected voice not found, using default.");
+        }
+
+        currentUtterance.rate = selectedSpeechRate; // Set the selected speech rate
+
+        setPronunciationButtonState(true); // Call central function to update button state to 'speaking'
+
+        currentUtterance.onend = () => {
+          setPronunciationButtonState(false);
+        };
+
+        currentUtterance.onerror = (event) => {
+          console.error("SpeechSynthesisUtterance.onerror", event); // Keep actual error logging
+          displayError(`Pronunciation error: ${event.error}`);
+          setPronunciationButtonState(false);
+        };
+
+        try {
+          speechSynthesis.speak(currentUtterance);
+        } catch (e) {
+          console.error("Synchronous error calling speechSynthesis.speak:", e);
+          displayError(
+            "Could not start pronunciation. Please try again or check browser settings."
+          );
+          setPronunciationButtonState(false); // Reset buttons on synchronous error
+        }
+      }
+
+      function stopSpeaking() {
+        if (speechSynthesis.speaking) {
+          speechSynthesis.cancel();
+        }
+        setPronunciationButtonState(false); // Call central function to update button state to 'not speaking'
+      }
 
       // Event Listeners
       levelSelect.addEventListener("change", (event) => {
@@ -613,13 +977,78 @@
         updateExtractedWords();
       });
 
+      difficultyModeSelect.addEventListener("change", (event) => {
+        selectedDifficultyMode = event.target.value;
+        console.log("Selected Difficulty Mode:", selectedDifficultyMode);
+        clearStoryDisplay();
+        clearError();
+      });
+
+      storyModeSelect.addEventListener("change", (event) => {
+        selectedStoryMode = event.target.value;
+        console.log("Selected Story Mode:", selectedStoryMode);
+        clearStoryDisplay();
+        clearError();
+      });
+
+      voiceSpeedInput.addEventListener("input", (event) => {
+        // New event listener for speed input
+        selectedSpeechRate = parseFloat(event.target.value);
+        voiceSpeedValue.textContent = `${selectedSpeechRate.toFixed(1)}x`;
+        // If speaking, restart with new rate to apply immediately (optional, but good UX)
+        if (speechSynthesis.speaking && currentUtterance) {
+          const textToRespeak = englishStoryText.textContent.trim(); // Get the raw text for respeak
+          speechSynthesis.cancel(); // Cancel current speech
+          currentUtterance = new SpeechSynthesisUtterance(textToRespeak); // Create new utterance
+          const selectedVoiceName = voiceSelect.value;
+          const selectedVoice = availableVoices.find(
+            (voice) => voice.name === selectedVoiceName
+          );
+          if (selectedVoice) {
+            currentUtterance.voice = selectedVoice;
+          }
+          currentUtterance.rate = selectedSpeechRate;
+          // Re-attach onend/onerror to the new utterance
+          currentUtterance.onend = () => {
+            setPronunciationButtonState(false);
+          };
+          currentUtterance.onerror = (event) => {
+            console.error("SpeechSynthesisUtterance.onerror", event);
+            displayError(`Pronunciation error: ${event.error}`);
+            setPronunciationButtonState(false);
+          };
+
+          try {
+            speechSynthesis.speak(currentUtterance);
+          } catch (e) {
+            console.error("Synchronous error restarting speech:", e);
+            displayError("Could not restart pronunciation with new speed.");
+            setPronunciationButtonState(false);
+          }
+        }
+      });
+
       generateButton.addEventListener("click", generateStory);
+
+      pronounceButton.addEventListener("click", speakEnglishStory);
+      stopPronounceButton.addEventListener("click", stopSpeaking);
+
+      // Populate voices when they are loaded (important for some browsers)
+      speechSynthesis.onvoiceschanged = populateVoiceList;
 
       // Initial setup on page load
       document.addEventListener("DOMContentLoaded", () => {
         console.log("DOMContentLoaded fired.");
         updateMissions(); // Initialize missions for the default level (A1)
-        // Initial state for the button based on words
+
+        // Populate voices immediately if available, otherwise wait for voiceschanged event
+        if (speechSynthesis.getVoices().length > 0) {
+          populateVoiceList();
+        } else {
+          // If voices aren't immediately available, listen for them
+          speechSynthesis.onvoiceschanged = populateVoiceList;
+        }
+
         if (extractedWordsForMission.length === 0) {
           generateButton.disabled = true;
           generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
@@ -633,6 +1062,24 @@
           );
           console.log("Initial button state: DISABLED (no words yet).");
         }
+        difficultyModeSelect.value = selectedDifficultyMode;
+        storyModeSelect.value = selectedStoryMode;
+        voiceSpeedInput.value = selectedSpeechRate; // Set initial slider value
+        voiceSpeedValue.textContent = `${selectedSpeechRate.toFixed(1)}x`; // Set initial text
+
+        // Toggle Bangla story visibility
+        toggleBanglaStoryButton.addEventListener("click", () => {
+          isBanglaStoryVisible = !isBanglaStoryVisible;
+          if (isBanglaStoryVisible) {
+            banglaStoryContainer.classList.remove("hidden");
+            toggleBanglaStoryButton.textContent = "Hide Banglad Translation";
+            console.log("Bangla story shown.");
+          } else {
+            banglaStoryContainer.classList.add("hidden");
+            toggleBanglaStoryButton.textContent = "Show Bangla Translation";
+            console.log("Bangla story hidden.");
+          }
+        });
       });
     </script>
   </body>
