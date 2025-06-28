@@ -16,15 +16,229 @@
     <style>
       body {
         font-family: "Inter", sans-serif;
+        transition: background-color 0.3s ease-in-out;
+      }
+
+      /* Define CSS Variables for light theme (default) */
+      :root {
+        /* General Backgrounds */
+        --bg-main-panel: #ffffff; /* Main panel background */
+        --bg-controls: #f3f4f6; /* Pronunciation controls background */
+        --bg-extracted-words-section: #eff6ff; /* Extracted words section background */
+        --bg-story-display-area: #f9fafb; /* Story display area background */
+        --bg-select-input: #ffffff; /* Select input background */
+        --bg-range-track: #d1d5db; /* Range slider track */
+        --bg-theme-toggle: #e5e7eb; /* Theme toggle button background */
+        --bg-error-message: #fee2e2; /* Error message background */
+        --bg-extracted-word-tag: #bfdbfe; /* Individual word tag background */
+
+        /* Text Colors */
+        --text-main: #1f2937; /* Main headings, general text */
+        --text-label: #4b5563; /* Label text */
+        --text-input: #1f2937; /* Select input text */
+        --text-initial-message: #6b7280; /* Initial message text */
+        --text-info-section: #1e40af; /* Extracted words section text */
+        --text-info-tag: #1e3a8a; /* Individual word tag text */
+        --text-story-header: #4b5563; /* Story header text */
+        --text-story-content: #1f2937; /* Story content text */
+        --text-error-message: #b91c1c; /* Error message text */
+        --text-theme-toggle: #4b5563; /* Theme toggle icon color */
+        --text-footer: #4b5563; /* Footer text */
+
+        /* Border Colors */
+        --border-input: #d1d5db; /* Select input border */
+        --border-extracted-words: #bfdbfe; /* Extracted words section border */
+        --border-error: #ef4444; /* Error message border */
+        --border-footer: #d1d5db; /* Footer border */
+      }
+
+      /* Define CSS Variables for dark theme */
+      html.dark {
+        --bg-main-panel: #1f2937;
+        --bg-controls: #374151;
+        --bg-extracted-words-section: #1e3a8a;
+        --bg-story-display-area: #374151;
+        --bg-select-input: #374151;
+        --bg-range-track: #4b5563;
+        --bg-theme-toggle: #374151;
+        --bg-error-message: #7f1d1d;
+        --bg-extracted-word-tag: #2563eb;
+
+        --text-main: #f9fafb;
+        --text-label: #d1d5db;
+        --text-input: #f9fafb;
+        --text-initial-message: #9ca3af;
+        --text-info-section: #bfdbfe;
+        --text-info-tag: #e0f2f7;
+        --text-story-header: #d1d5db;
+        --text-story-content: #f3f4f6;
+        --text-error-message: #fca5a5;
+        --text-theme-toggle: #e5e7eb;
+        --text-footer: #9ca3af;
+
+        --border-input: #4b5563;
+        --border-extracted-words: #2563eb;
+        --border-error: #ef4444;
+        --border-footer: #4b5563;
+      }
+
+      /* Apply variables using custom classes */
+      .main-panel-bg {
+        background-color: var(--bg-main-panel);
+        transition: background-color 0.3s ease;
+      }
+      .text-primary-color {
+        color: var(--text-main);
+        transition: color 0.3s ease;
+      } /* General text/headings */
+
+      label {
+        color: var(--text-label);
+        transition: color 0.3s ease;
+      }
+
+      .select-input-style {
+        background-color: var(--bg-select-input);
+        border-color: var(--border-input);
+        color: var(--text-input);
+        transition: background-color 0.3s ease, border-color 0.3s ease,
+          color 0.3s ease;
+      }
+      /* Ensure SVG icons within select don't use fill-current (which is usually black/white) but pick up label color */
+      .pointer-events-none svg {
+        color: var(--text-label);
+        transition: color 0.3s ease;
+      }
+
+      #pronunciation-controls {
+        background-color: var(--bg-controls);
+        transition: background-color 0.3s ease;
+      }
+      input[type="range"] {
+        background-color: var(--bg-range-track);
+        transition: background-color 0.3s ease;
+      }
+      /* Custom dark mode shadows if needed, using direct Tailwind dark: classes */
+      .dark .shadow-2xl {
+        box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.75);
+      }
+      .dark .shadow-inner {
+        box-shadow: inset 0 2px 4px 0 rgba(0, 0, 0, 0.6);
+      }
+      .dark .shadow-lg {
+        box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.5),
+          0 4px 6px -2px rgba(0, 0, 0, 0.4);
+      }
+      .dark .hover\:shadow-xl:hover {
+        box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.6),
+          0 10px 10px -5px rgba(0, 0, 0, 0.5);
+      }
+
+      #extracted-words-section {
+        background-color: var(--bg-extracted-words-section);
+        border-color: var(--border-extracted-words);
+        color: var(--text-info-section);
+        transition: background-color 0.3s ease, border-color 0.3s ease,
+          color 0.3s ease;
+      }
+      #extracted-words-section h3 {
+        color: var(--text-label);
+        transition: color 0.3s ease;
+      } /* Use label color for this h3 */
+
+      #extracted-words-container span {
+        background-color: var(--bg-extracted-word-tag);
+        color: var(--text-info-tag);
+        transition: background-color 0.3s ease, color 0.3s ease;
+      }
+
+      .story-display-area-style {
+        background-color: var(--bg-story-display-area);
+        transition: background-color 0.3s ease;
+      }
+      #english-story-container h3,
+      #bangla-story-container h3 {
+        color: var(--text-story-header);
+        transition: color 0.3s ease;
+      }
+      #english-story-text,
+      #bangla-story-text {
+        color: var(--text-story-content);
+        transition: color 0.3s ease;
+      }
+
+      #initial-message {
+        color: var(--text-initial-message);
+        transition: color 0.3s ease;
+      }
+
+      #error-message {
+        background-color: var(--bg-error-message);
+        border-color: var(--border-error);
+        color: var(--text-error-message);
+        transition: background-color 0.3s ease, border-color 0.3s ease,
+          color 0.3s ease;
+      }
+
+      footer {
+        border-color: var(--border-footer);
+        color: var(--text-footer);
+        transition: border-color 0.3s ease, color 0.3s ease;
+      }
+
+      #theme-toggle {
+        background-color: var(--bg-theme-toggle);
+        color: var(--text-theme-toggle);
+        transition: background-color 0.3s ease, color 0.3s ease;
       }
     </style>
   </head>
   <body
-    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center"
+    class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 flex items-center justify-center relative p-4 dark:from-gray-900 dark:to-gray-800"
   >
-    <div class="bg-white rounded-xl shadow-2xl p-4 max-w-4xl w-full">
+    <!-- Dark Mode Toggle Button -->
+    <button
+      id="theme-toggle"
+      class="absolute top-4 right-4 p-2 rounded-full shadow-md transition-colors duration-300 ease-in-out hover:bg-gray-300 hover:text-gray-800"
+      aria-label="Toggle dark mode"
+    >
+      <!-- Sun Icon (Light Mode) -->
+      <svg
+        id="sun-icon"
+        class="w-6 h-6"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M12 3v1m0 16v1m9-9h1M3 12h1m15.325-7.757l-.707.707M4.343 19.657l-.707-.707M19.657 4.343l-.707.707M4.343 4.343l-.707-.707M18 12a6 6 0 11-12 0 6 6 0 0112 0z"
+        ></path>
+      </svg>
+      <!-- Moon Icon (Dark Mode) -->
+      <svg
+        id="moon-icon"
+        class="w-6 h-6 hidden"
+        fill="none"
+        stroke="currentColor"
+        viewBox="0 0 24 24"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <path
+          stroke-linecap="round"
+          stroke-linejoin="round"
+          stroke-width="2"
+          d="M20.354 15.354A9 9 0 018.646 3.646 9.003 9.003 0 0012 21a9.003 9.003 0 008.354-5.646z"
+        ></path>
+      </svg>
+    </button>
+
+    <div class="rounded-xl shadow-2xl p-4 max-w-4xl w-full main-panel-bg">
       <h1
-        class="text-4xl font-extrabold text-center text-gray-800 mb-8 tracking-tight"
+        class="text-4xl font-extrabold text-center mb-8 tracking-tight text-primary-color"
       >
         Start Reading Story <span class="text-indigo-600">!</span>
       </h1>
@@ -33,16 +247,13 @@
       <div class="grid grid-cols-1 md:grid-cols-5 gap-6 mb-8 items-end">
         <!-- Level Selection -->
         <div class="flex flex-col">
-          <label
-            for="level-select"
-            class="block text-gray-700 text-lg font-semibold mb-2"
-          >
+          <label for="level-select" class="block text-lg font-semibold mb-2">
             Select Level:
           </label>
           <div class="relative">
             <select
               id="level-select"
-              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+              class="block w-full px-5 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg appearance-none pr-10 select-input-style"
             >
               <option value="A1">A1</option>
               <option value="A2">A2</option>
@@ -51,7 +262,7 @@
               <option value="C1">C1</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4"
             >
               <svg
                 class="fill-current h-5 w-5"
@@ -68,22 +279,19 @@
 
         <!-- Mission Selection -->
         <div class="flex flex-col">
-          <label
-            for="mission-select"
-            class="block text-gray-700 text-lg font-semibold mb-2"
-          >
+          <label for="mission-select" class="block text-lg font-semibold mb-2">
             Select Mission:
           </label>
           <div class="relative">
             <select
               id="mission-select"
-              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+              class="block w-full px-5 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg appearance-none pr-10 select-input-style"
               disabled
             >
               <option value="" disabled>No Mission Found</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4"
             >
               <svg
                 class="fill-current h-5 w-5"
@@ -102,14 +310,14 @@
         <div class="flex flex-col">
           <label
             for="difficulty-mode-select"
-            class="block text-gray-700 text-lg font-semibold mb-2"
+            class="block text-lg font-semibold mb-2"
           >
             Difficulty Mode:
           </label>
           <div class="relative">
             <select
               id="difficulty-mode-select"
-              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+              class="block w-full px-5 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg appearance-none pr-10 select-input-style"
             >
               <option value="easy">Easy</option>
               <option value="easy+">Easy+</option>
@@ -118,7 +326,7 @@
               <option value="hard">Hard</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4"
             >
               <svg
                 class="fill-current h-5 w-5"
@@ -137,14 +345,14 @@
         <div class="flex flex-col">
           <label
             for="story-mode-select"
-            class="block text-gray-700 text-lg font-semibold mb-2"
+            class="block text-lg font-semibold mb-2"
           >
             Story Mode:
           </label>
           <div class="relative">
             <select
               id="story-mode-select"
-              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-gray-800 text-lg appearance-none pr-10"
+              class="block w-full px-5 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 text-lg appearance-none pr-10 select-input-style"
             >
               <option value="children">🧒 Children Mode</option>
               <option value="exam">🎓 Exam Mode</option>
@@ -152,7 +360,7 @@
               <option value="real-world">📜 Real-World Mode</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4"
             >
               <svg
                 class="fill-current h-5 w-5"
@@ -171,7 +379,7 @@
         <div class="flex flex-col md:col-span-1">
           <button
             id="generate-button"
-            class="w-full py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-indigo-300 cursor-not-allowed"
+            class="w-full py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-indigo-300 cursor-not-allowed dark:bg-indigo-700 dark:hover:bg-indigo-800"
             disabled
           >
             <span id="button-text">Get Story </span>
@@ -208,24 +416,24 @@
       <!-- Pronunciation Controls -->
       <div
         id="pronunciation-controls"
-        class="hidden flex flex-col md:flex-row gap-4 mb-8 justify-center items-center p-4 rounded-lg bg-gray-100 shadow-inner"
+        class="hidden flex flex-col md:flex-row gap-4 mb-8 justify-center items-center p-4 rounded-lg shadow-inner pronunciation-controls-bg"
       >
         <div class="flex flex-col flex-grow w-full md:w-auto">
           <label
             for="voice-select"
-            class="block text-gray-700 text-lg font-semibold mb-2 text-center md:text-left"
+            class="block text-lg font-semibold mb-2 text-center md:text-left"
           >
             Select Voice:
           </label>
           <div class="relative">
             <select
               id="voice-select"
-              class="block w-full px-5 py-3 border border-gray-300 bg-white rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-gray-800 text-lg appearance-none pr-10"
+              class="block w-full px-5 py-3 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 text-lg appearance-none pr-10 select-input-style"
             >
               <option value="" disabled selected>Loading voices...</option>
             </select>
             <div
-              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4 text-gray-700"
+              class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-4"
             >
               <svg
                 class="fill-current h-5 w-5"
@@ -244,7 +452,7 @@
         <div class="flex flex-col flex-grow w-full md:w-auto">
           <label
             for="voice-speed-input"
-            class="block text-gray-700 text-lg font-semibold mb-2 text-center md:text-left"
+            class="block text-lg font-semibold mb-2 text-center md:text-left"
           >
             Speed: <span id="voice-speed-value">1.0x</span>
           </label>
@@ -255,7 +463,7 @@
             max="2.0"
             step="0.1"
             value="1.0"
-            class="w-full h-3 bg-gray-300 rounded-lg appearance-none cursor-pointer range-lg focus:outline-none focus:ring-2 focus:ring-purple-500"
+            class="w-full h-3 rounded-lg appearance-none cursor-pointer range-lg focus:outline-none focus:ring-2 focus:ring-purple-500 range-track-bg"
           />
         </div>
 
@@ -264,7 +472,7 @@
           class="w-full md:w-auto py-3 px-6 rounded-lg text-white font-bold text-lg transition duration-300 ease-in-out bg-purple-600 hover:bg-purple-700 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
           disabled
         >
-          start pronunciation
+          Start Pronunciation
         </button>
         <button
           id="stop-pronounce-button"
@@ -277,7 +485,7 @@
       <!-- Display extracted words -->
       <div
         id="extracted-words-section"
-        class="hidden bg-blue-50 border border-blue-200 text-blue-800 p-4 rounded-lg mb-8 shadow-inner"
+        class="hidden border p-4 rounded-lg mb-8 shadow-inner extracted-words-section-bg extracted-words-section-border extracted-words-section-text"
       >
         <h3 class="text-xl font-semibold mb-3">Selected mission words:</h3>
         <p id="extracted-words-container" class="flex flex-wrap gap-2 text-lg">
@@ -287,11 +495,11 @@
 
       <!-- Story Display Area -->
       <div
-        class="bg-gray-50 p-6 rounded-xl shadow-inner min-h-[200px] flex flex-col justify-center items-center"
+        class="p-6 rounded-xl shadow-inner min-h-[200px] flex flex-col justify-center items-center story-display-area-style"
       >
         <div
           id="error-message"
-          class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative w-full mb-4"
+          class="hidden px-4 py-3 rounded relative w-full mb-4 error-message-bg error-message-border error-message-text"
           role="alert"
         >
           <strong class="font-bold">Error!</strong>
@@ -299,12 +507,12 @@
         </div>
         <div id="story-content">
           <div id="english-story-container" class="mb-6 w-full hidden">
-            <h3 class="text-2xl font-bold text-gray-700 mb-3">
+            <h3 class="text-2xl font-bold mb-3 story-header-color">
               English Story:
             </h3>
             <p
               id="english-story-text"
-              class="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap"
+              class="text-lg leading-relaxed whitespace-pre-wrap story-text-color"
             >
               <!-- English story will be injected here -->
             </p>
@@ -312,32 +520,33 @@
           <!-- Button to toggle Bangla story visibility -->
           <button
             id="toggle-bangla-story-button"
-            class="hidden w-fit py-2 px-4 mb-4 rounded-lg text-white font-semibold text-base transition duration-300 ease-in-out bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg"
+            class="hidden w-fit py-2 px-4 mb-4 rounded-lg text-white font-semibold text-base transition duration-300 ease-in-out bg-green-600 hover:bg-green-700 shadow-md hover:shadow-lg dark:bg-green-700 dark:hover:bg-green-800"
           >
             Show Bangla Translation
           </button>
           <div id="bangla-story-container" class="w-full hidden">
-            <h3 class="text-2xl font-bold text-gray-700 mb-3">
+            <h3 class="text-2xl font-bold mb-3 story-header-color">
               Bangla Translation:
             </h3>
             <p
               id="bangla-story-text"
-              class="text-gray-800 text-lg leading-relaxed whitespace-pre-wrap"
+              class="text-lg leading-relaxed whitespace-pre-wrap story-text-color"
             >
               <!-- Bangla story will be injected here -->
             </p>
           </div>
-          <p id="initial-message" class="text-gray-500 text-lg italic">
+          <p id="initial-message" class="text-lg italic initial-message-color">
             Select the level and mission above and click the 'Get Story' button.
           </p>
         </div>
       </div>
     </div>
 
+    <!-- Footer -->
+
     <script type="module">
-      // In a real application, you would import this data from './data.js' like:
+      // Data definition
       import allWordsData from "./data.js";
-      // For this single HTML file demonstration, the data is defined here:
 
       // DOM elements
       const levelSelect = document.getElementById("level-select");
@@ -379,6 +588,9 @@
       );
       const voiceSpeedInput = document.getElementById("voice-speed-input");
       const voiceSpeedValue = document.getElementById("voice-speed-value");
+      const themeToggle = document.getElementById("theme-toggle"); // New: Theme toggle button
+      const sunIcon = document.getElementById("sun-icon"); // New: Sun icon
+      const moonIcon = document.getElementById("moon-icon"); // New: Moon icon
 
       // Global state variables (now within module scope)
       let selectedLevel = "A1";
@@ -479,9 +691,17 @@
         if (isSpeaking) {
           pronounceButton.classList.add("hidden");
           stopPronounceButton.classList.remove("hidden");
+          voiceSpeedInput.disabled = true; // Disable speed input when speaking
+          // Add classes for visual disable
+          voiceSpeedInput.classList.add("opacity-50", "pointer-events-none");
+          voiceSpeedInput.classList.remove("cursor-pointer"); // Remove active cursor
         } else {
           pronounceButton.classList.remove("hidden");
           stopPronounceButton.classList.add("hidden");
+          voiceSpeedInput.disabled = false; // Enable speed input when not speaking
+          // Remove classes for visual disable
+          voiceSpeedInput.classList.remove("opacity-50", "pointer-events-none");
+          voiceSpeedInput.classList.add("cursor-pointer"); // Add active cursor
         }
         // Only enable pronounce button if there's a story AND voices are loaded
         // Use englishStoryText.innerText instead of textContent for robustness, as textContent might still contain
@@ -561,6 +781,7 @@
         clearError();
         clearStoryDisplay();
 
+        // FIX: Use allWordsData to filter missions, not just A1Words
         const wordsInLevel = allWordsData.filter(
           (word) => word.level === selectedLevel
         );
@@ -606,6 +827,7 @@
         clearStoryDisplay();
 
         if (selectedLevel && selectedMission !== "") {
+          // FIX: Use allWordsData to filter words, not just A1Words
           extractedWordsForMission = allWordsData.filter(
             (word) =>
               word.level === selectedLevel && word.mission === selectedMission
@@ -673,9 +895,9 @@
           extractedWordsSection.classList.remove("hidden");
           extractedWordsForMission.forEach((wordObj) => {
             const span = document.createElement("span");
-            // Removed 'whitespace-nowrap' to allow wrapping on small screens
+            // Apply custom classes using CSS variables for background and text color
             span.className =
-              "bg-blue-200 text-blue-900 px-3 py-1 rounded-full text-base font-medium";
+              "px-3 py-1 rounded-full text-base font-medium extracted-word-tag-bg extracted-word-tag-text";
             span.textContent = `${wordObj.word} (${wordObj.bangla_meaning})`; // Display English word (Bangla meaning)
             extractedWordsContainer.appendChild(span);
           });
@@ -728,7 +950,7 @@
           case "medium":
             return "Middle level. Natural English with moderate complexity, using common vocabulary and sentence structures.";
           case "medium+":
-            return "Between Medium and Hard. For learners close to fluency, incorporating some advanced vocabulary and slightly more complex structures.";
+            return "For learners close to fluency, incorporating some advanced vocabulary and slightly more complex structures.";
           case "hard":
             return "Highest level. Native-like, including idioms, complex sentence structures, and advanced vocabulary.";
           default:
@@ -791,8 +1013,8 @@
           chatHistory.push({ role: "user", parts: [{ text: englishPrompt }] });
           const payload = { contents: chatHistory };
           // Using the provided API key here:
-          const apiKey = "AIzaSyBWPKr-Z9E2Bolp12maM_RItMbYLoQizKo";
-          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+          const apiKey = "AIzaSyBWPKr-Z9E2Bolp12maM_RItMbYLoQizKo"; // Keep API key as is
+          const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
           const englishResponse = await fetch(apiUrl, {
             method: "POST",
@@ -822,11 +1044,8 @@
             generatedEnglishText =
               englishResult.candidates[0].content.parts[0].text;
 
-            // Remove double asterisks from the generated English text
-            const cleanedEnglishText = generatedEnglishText.replace(
-              /\*\*/g,
-              ""
-            );
+            // Remove ALL asterisks (* and **) from the generated English text
+            const cleanedEnglishText = generatedEnglishText.replace(/\*+/g, "");
 
             // Highlight words and set innerHTML using the cleaned text
             englishStoryText.innerHTML = highlightWords(
@@ -911,8 +1130,9 @@
 
       // Text-to-Speech (TTS) Functions
       function speakEnglishStory() {
+        // Ensure any previous speech is cancelled
         if (speechSynthesis.speaking) {
-          speechSynthesis.cancel(); // Stop any currently speaking utterance
+          speechSynthesis.cancel();
         }
 
         const text = englishStoryText.textContent; // Use textContent to get plain text without HTML tags
@@ -936,15 +1156,19 @@
 
         currentUtterance.rate = selectedSpeechRate; // Set the selected speech rate
 
-        setPronunciationButtonState(true); // Call central function to update button state to 'speaking'
+        // Set button state to speaking BEFORE calling speak, which also disables speed input
+        setPronunciationButtonState(true);
 
         currentUtterance.onend = () => {
           setPronunciationButtonState(false);
         };
 
         currentUtterance.onerror = (event) => {
-          console.error("SpeechSynthesisUtterance.onerror", event); // Keep actual error logging
-          displayError(`Pronunciation error: ${event.error}`);
+          // Only display error if it's not an intentional interruption
+          if (event.error !== "interrupted") {
+            console.error("SpeechSynthesisUtterance.onerror", event); // Keep actual error logging
+            displayError(`Pronunciation error: ${event.error}`);
+          }
           setPronunciationButtonState(false);
         };
 
@@ -963,7 +1187,33 @@
         if (speechSynthesis.speaking) {
           speechSynthesis.cancel();
         }
-        setPronunciationButtonState(false); // Call central function to update button state to 'not speaking'
+        // Call central function to update button state to 'not speaking', which also enables speed input
+        setPronunciationButtonState(false);
+      }
+
+      // Theme Toggling Functions
+      function enableDarkMode() {
+        document.documentElement.classList.add("dark");
+        localStorage.setItem("theme", "dark");
+        sunIcon.classList.add("hidden");
+        moonIcon.classList.remove("hidden");
+        console.log("Dark mode enabled.");
+      }
+
+      function disableDarkMode() {
+        document.documentElement.classList.remove("dark");
+        localStorage.setItem("theme", "light");
+        sunIcon.classList.remove("hidden");
+        moonIcon.classList.add("hidden");
+        console.log("Light mode enabled.");
+      }
+
+      function toggleTheme() {
+        if (document.documentElement.classList.contains("dark")) {
+          disableDarkMode();
+        } else {
+          enableDarkMode();
+        }
       }
 
       // Event Listeners
@@ -992,46 +1242,26 @@
       });
 
       voiceSpeedInput.addEventListener("input", (event) => {
-        // New event listener for speed input
         selectedSpeechRate = parseFloat(event.target.value);
         voiceSpeedValue.textContent = `${selectedSpeechRate.toFixed(1)}x`;
-        // If speaking, restart with new rate to apply immediately (optional, but good UX)
-        if (speechSynthesis.speaking && currentUtterance) {
-          const textToRespeak = englishStoryText.textContent.trim(); // Get the raw text for respeak
-          speechSynthesis.cancel(); // Cancel current speech
-          currentUtterance = new SpeechSynthesisUtterance(textToRespeak); // Create new utterance
-          const selectedVoiceName = voiceSelect.value;
-          const selectedVoice = availableVoices.find(
-            (voice) => voice.name === selectedVoiceName
-          );
-          if (selectedVoice) {
-            currentUtterance.voice = selectedVoice;
-          }
-          currentUtterance.rate = selectedSpeechRate;
-          // Re-attach onend/onerror to the new utterance
-          currentUtterance.onend = () => {
-            setPronunciationButtonState(false);
-          };
-          currentUtterance.onerror = (event) => {
-            console.error("SpeechSynthesisUtterance.onerror", event);
-            displayError(`Pronunciation error: ${event.error}`);
-            setPronunciationButtonState(false);
-          };
 
-          try {
-            speechSynthesis.speak(currentUtterance);
-          } catch (e) {
-            console.error("Synchronous error restarting speech:", e);
-            displayError("Could not restart pronunciation with new speed.");
-            setPronunciationButtonState(false);
-          }
-        }
+        // IMPORTANT: The speed slider is disabled when speaking, so this event listener
+        // will not fire if speech is active. When speech is NOT active, it allows
+        // the user to set the desired rate for the *next* pronunciation.
+        // If we want to change speed WHILE speaking, the logic would be:
+        // 1. stop current speech
+        // 2. update rate
+        // 3. restart speech
+        // However, the current requirement is to disable the slider, which prevents #1.
+        // So, no action here for active speech.
       });
 
       generateButton.addEventListener("click", generateStory);
 
       pronounceButton.addEventListener("click", speakEnglishStory);
       stopPronounceButton.addEventListener("click", stopSpeaking);
+
+      themeToggle.addEventListener("click", toggleTheme); // New: Theme toggle event listener
 
       // Populate voices when they are loaded (important for some browsers)
       speechSynthesis.onvoiceschanged = populateVoiceList;
@@ -1052,20 +1282,20 @@
         if (extractedWordsForMission.length === 0) {
           generateButton.disabled = true;
           generateButton.classList.add("bg-indigo-300", "cursor-not-allowed");
-          generateButton.classList.remove(
-            "bg-indigo-600",
-            "hover:bg-indigo-700",
-            "shadow-lg",
-            "hover:shadow-xl",
-            "transform",
-            "hover:-translate-y-0.5"
-          );
           console.log("Initial button state: DISABLED (no words yet).");
         }
         difficultyModeSelect.value = selectedDifficultyMode;
         storyModeSelect.value = selectedStoryMode;
         voiceSpeedInput.value = selectedSpeechRate; // Set initial slider value
         voiceSpeedValue.textContent = `${selectedSpeechRate.toFixed(1)}x`; // Set initial text
+
+        // Check for saved theme preference or set default to light
+        if (localStorage.getItem("theme") === "dark") {
+          enableDarkMode();
+        } else {
+          // Default to light mode if no preference or explicitly 'light'
+          disableDarkMode();
+        }
 
         // Toggle Bangla story visibility
         toggleBanglaStoryButton.addEventListener("click", () => {
